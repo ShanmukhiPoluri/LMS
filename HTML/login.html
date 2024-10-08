@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LMS</title>
+    
+    <!-- Font Awesome CDN for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;          
+            background-color: rgb(51, 49, 49);
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .sidebar {
+            background-color: #111;
+            color: white;
+            width: 200px;
+            height: 100vh;
+            padding-top: 20px;
+            position: fixed;
+            left: -200px; /* Initially hide the sidebar */
+            top: 0;
+            overflow: hidden;
+            transition: left 0.3s ease;
+            z-index: 1000;
+            box-sizing: border-box;
+        }
+
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sidebar ul li {
+            padding: 15px;
+            text-align: left;
+            margin-top: 30px; /* Adds space above each menu item */
+        }
+
+        .sidebar ul li a {
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            font-weight: bold;
+        }
+
+        .sidebar ul li a i {
+            margin-right: 10px; /* Adds space between icon and text */
+        }
+
+        .sidebar ul li:hover {
+            background-color: #575757;
+            cursor: pointer;
+            border-radius: 10px;
+            font-size: large;
+        }
+
+        .close-btn {
+            font-size: 24px;
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            position: absolute;
+            top: 10px;
+            right: 15px;
+        }
+
+        nav {
+            padding: 10px 10px;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-sizing: border-box;
+            background-color: black;
+            z-index: 999;
+        }
+
+        .toggle-btn {
+            font-size: 24px;
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+        }
+
+        .login-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            height: 370px;
+            position: relative;
+            z-index: 1;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            border: 1px solid #111111;
+            border-radius: 4px;
+        }
+
+        .dropdown-group {
+            margin-bottom: 15px;
+        }
+
+        .dropdown-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .dropdown-group select {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            border: 1px solid #111111;
+            border-radius: 4px;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: space-between; /* Space between buttons */
+        }
+
+        .button {
+            width: 48%; /* Make buttons take up 48% of the container */
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        .button:hover {
+            background-color: #45a049;
+        }
+
+        .reset-button {
+            background-color: #f44336; /* Red color for the reset button */
+        }
+
+        .reset-button:hover {
+            background-color: #e53935; /* Darker red on hover */
+        }
+        .signup-container {
+            text-align: center; /* Center align the text */
+            margin-top: 20px; /* Space above the container */
+            font-size: 14px; /* Adjust the font size */
+        }
+
+        .signup-container a {
+            color: #4CAF50; /* Set the link color */
+            text-decoration: none; /* Remove underline */
+            font-weight: bold; /* Make the link text bold */
+        }
+
+        .signup-container a:hover {
+            text-decoration: underline; /* Add underline on hover */
+            color: #38723b; /* Darker green on hover */
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Navbar Section -->
+    <nav id="navbar" class="navbar-visible">
+        <button id="toggleBtn" class="toggle-btn">☰</button>
+        <h1 style="color: white; font-size: 1.1em; display: flex; align-items: center;">
+            <i class="fa-solid fa-graduation-cap" style="margin-right: 10px;"></i>
+            Learning Management System
+        </h1>
+    </nav>
+
+    <!-- Sidebar Section -->
+    <div class="sidebar">
+        <button id="closeBtn" class="close-btn">×</button>
+        <ul>
+            <li><a href="base.html"><i class="fas fa-tachometer-alt"></i>Dashboard</a></li>
+            <li><a href="Courses.html"><i class="fas fa-book"></i>Courses</a></li>
+            <li><a href="quizzes.html"><i class="fas fa-tasks"></i>Quizzes</a></li>
+            <li><a href="Assignments.html"><i class="fas fa-file-alt"></i>Assignments</a></li>
+            <li><a href="Attendence.html"><i class="fas fa-user-check"></i>Attendence</a></li>
+            <li><a href="login.html"><i class="fas fa-sign-in-alt"></i>Login</a></li>
+        </ul>
+    </div>
+
+    <div class="login-container">
+        <form id="loginForm">
+            <h2>Login</h2>
+            <div class="input-group">
+                <label for="username">
+                    <i class="fa-solid fa-user"></i> Username:
+                </label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="input-group">
+                <label for="password">
+                    <i class="fa-solid fa-lock"></i> Password:
+                </label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <div class="dropdown-group">
+                <label for="role">
+                    <i class="fa-solid fa-right-to-bracket"></i> Select Role:
+                </label>
+                <select id="role" name="role" required>
+                    <option value="">Select Role</option>
+                    <option value="student">Student</option>
+                    <option value="faculty">Faculty</option>
+                    <option value="admin">Admin</option>
+                </select>
+            </div>
+            <div class="button-container">
+                <button type="submit" class="button">Login</button>
+                <button type="reset" class="button reset-button">Reset</button>
+            </div>
+            <div class="signup-container">
+                Create an account <a href="signup.html">Sign up</a>
+            </div>
+        </form>
+    </div>
+    
+
+    <!-- JavaScript to handle hiding and showing the sidebar -->
+    <script>
+        const closeBtn = document.getElementById('closeBtn');
+        const toggleBtn = document.getElementById('toggleBtn');
+        const sidebar = document.querySelector('.sidebar');
+
+        // Hide sidebar initially
+        sidebar.style.left = '-200px';
+
+        // When the close button (×) is clicked, hide the sidebar
+        closeBtn.addEventListener('click', function() {
+            sidebar.style.left = '-200px';
+        });
+
+        // When the toggle button (☰) is clicked, show the sidebar
+        toggleBtn.addEventListener('click', function() {
+            sidebar.style.left = '0';
+        });
+        
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance</title>
+
+    <!-- Font Awesome CDN for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        .sidebar {
+            background-color: #111;
+            color: white;
+            width: 200px;
+            height: 100vh;
+            padding-top: 20px;
+            position: fixed;
+            left: -200px; /* Initially hide the sidebar */
+            top: 0;
+            overflow: hidden;
+            transition: left 0.3s ease;
+            z-index: 1000;
+            box-sizing: border-box;
+        }
+
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sidebar ul li {
+            padding: 15px;
+            text-align: left;
+            margin-top: 30px; /* Adds space above each menu item */
+        }
+
+        .sidebar ul li a {
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            font-weight: bold;
+        }
+
+        .sidebar ul li a i {
+            margin-right: 10px; /* Adds space between icon and text */
+        }
+
+        .sidebar ul li:hover {
+            background-color: #575757;
+            cursor: pointer;
+            border-radius: 10px;
+            font-size: large;
+        }
+
+        .close-btn {
+            font-size: 24px;
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            position: absolute;
+            top: 10px;
+            right: 15px;
+        }
+
+        .content {
+            margin-left: 0;
+            padding: 20px;
+            width: 100%;
+            height: 100vh;
+            background-color: #2d2d2d;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            transition: margin-left 0.3s ease, width 0.3s ease;
+        }
+
+        nav {
+            padding: 10px 10px;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-sizing: border-box;
+            background-color: black;
+            z-index: 999;
+        }
+
+        .toggle-btn {
+            font-size: 24px;
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+        }
+
+        .attendance-container {
+            margin: 20px;
+            padding: 20px;
+            background-color: #3c3c3c; /* Container background */
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            width: 100%;
+        }
+
+        .attendance-title {
+            font-size: 1.8em;
+            color: #f0f0f0; /* Lighter title color */
+            margin-bottom: 20px;
+        }
+
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+        }
+
+        .day {
+            background-color: #444;
+            border: 1px solid #555;
+            padding: 10px;
+            text-align: center;
+            border-radius: 5px;
+            position: relative;
+        }
+
+        .attendance-status {
+            margin-top: 10px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .present {
+            color: #4CAF50; /* Green */
+        }
+
+        .absent {
+            color: #f44336; /* Red */
+        }
+
+        .submit-button {
+            background-color: #4CAF50; /* Green button */
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .submit-button:hover {
+            background-color: #45a049; /* Darker green on hover */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar Section -->
+    <nav id="navbar" class="navbar-visible">
+        <button id="toggleBtn" class="toggle-btn">☰</button>
+        <h1 style="color: white; font-size: 1.1em; display: flex; align-items: center;">
+            <i class="fa-solid fa-graduation-cap" style="margin-right: 10px;"></i>
+            Learning Management System
+        </h1>
+    </nav>
+
+    <!-- Sidebar Section -->
+    <div class="sidebar">
+        <button id="closeBtn" class="close-btn">×</button>
+        <ul>
+            <li><a href="base.html"><i class="fas fa-tachometer-alt"></i>Dashboard</a></li>
+            <li><a href="Courses.html"><i class="fas fa-book"></i>Courses</a></li>
+            <li><a href="quizzes.html"><i class="fas fa-tasks"></i>Quizzes</a></li>
+            <li><a href="assignments.html"><i class="fas fa-file-alt"></i>Assignments</a></li>
+            <li><a href="Attendance.html"><i class="fas fa-user-check"></i>Attendance</a></li>
+            <li><a href="login.html"><i class="fas fa-sign-in-alt"></i>Login</a></li>
+        </ul>
+    </div>
+
+    <!-- Content Section -->
+    <div class="content">
+        <div class="attendance-container">
+            <h2 class="attendance-title">Student Attendance</h2>
+            <label for="month-select">Select Month:</label>
+            <select id="month-select" onchange="updateCalendar()">
+                <option value="January">January</option>
+                <option value="February">February</option>
+                <option value="March">March</option>
+                <option value="April">April</option>
+                <option value="May">May</option>
+                <option value="June">June</option>
+                <option value="July">July</option>
+                <option value="August">August</option>
+                <option value="September">September</option>
+                <option value="October">October</option>
+            </select>
+            
+            <div class="calendar" id="calendar">
+                <!-- Calendar days will be populated here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const toggleBtn = document.getElementById('toggleBtn');
+        const closeBtn = document.getElementById('closeBtn');
+        const sidebar = document.querySelector('.sidebar');
+        const content = document.querySelector('.content');
+        const calendarElement = document.getElementById('calendar');
+
+        toggleBtn.addEventListener('click', () => {
+            sidebar.style.left = '0';
+            content.style.marginLeft = '200px';
+            content.style.width = 'calc(100% - 200px)';
+        });
+
+        closeBtn.addEventListener('click', () => {
+            sidebar.style.left = '-200px';
+            content.style.marginLeft = '0';
+            content.style.width = '100%';
+        });
+
+        function updateCalendar() {
+            const month = document.getElementById('month-select').value;
+            let daysInMonth;
+            let startDay = 1;
+            const currentDay = new Date().getDate();
+            const absentees = [3, 10, 15, 22, 25]; // Example absent days
+
+            switch(month) {
+                case "January":
+                    daysInMonth = 31;
+                    break;
+                case "February":
+                    daysInMonth = 28; // Not considering leap years
+                    break;
+                case "March":
+                    daysInMonth = 31;
+                    break;
+                case "April":
+                    daysInMonth = 30;
+                    break;
+                case "May":
+                    daysInMonth = 31;
+                    break;
+                case "June":
+                    daysInMonth = 30;
+                    break;
+                case "July":
+                    daysInMonth = 31;
+                    break;
+                case "August":
+                    daysInMonth = 31;
+                    break;
+                case "September":
+                    daysInMonth = 30;
+                    break;
+                case "October":
+                    daysInMonth = currentDay; // Only show up to today's date in October
+                    break;
+                default:
+                    daysInMonth = 0;
+            }
+
+            // Clear previous calendar
+            calendarElement.innerHTML = '';
+
+            for (let day = startDay; day <= daysInMonth; day++) {
+                const dayElement = document.createElement('div');
+                dayElement.className = 'day';
+                dayElement.innerHTML = `<strong>${day}</strong>`;
+
+                // Determine attendance status
+                const isAbsent = absentees.includes(day);
+                const status = isAbsent ? 'Absent' : 'Present';
+                dayElement.innerHTML += `<div class="attendance-status ${isAbsent ? 'absent' : 'present'}">${status}</div>`;
+                
+                calendarElement.appendChild(dayElement);
+            }
+        }
+
+        // Initial calendar load
+        updateCalendar();
+    </script>
+</body>
+</html>

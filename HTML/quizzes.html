@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quizzes - Learning Management System</title>
+
+    <!-- Font Awesome CDN for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        .sidebar {
+            background-color: #111;
+            color: white;
+            width: 200px;
+            height: 100vh;
+            padding-top: 20px;
+            position: fixed;
+            left: -200px; /* Initially hide the sidebar */
+            top: 0;
+            overflow: hidden;
+            transition: left 0.3s ease;
+            z-index: 1000;
+            box-sizing: border-box;
+        }
+
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sidebar ul li {
+            padding: 15px;
+            text-align: left;
+            margin-top: 30px; /* Adds space above each menu item */
+        }
+
+        .sidebar ul li a {
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            font-weight: bold;
+        }
+
+        .sidebar ul li a i {
+            margin-right: 10px; /* Adds space between icon and text */
+        }
+
+        .sidebar ul li:hover {
+            background-color: #575757;
+            cursor: pointer;
+            border-radius: 10px;
+            font-size: large;
+        }
+
+        .close-btn {
+            font-size: 24px;
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            position: absolute;
+            top: 10px;
+            right: 15px;
+        }
+
+        .content {
+            margin-left: 0;
+            padding: 20px;
+            width: 100%;
+            height: 100vh;
+            background-color: #2d2d2d;
+            color: white;
+            transition: margin-left 0.3s ease, width 0.3s ease;
+        }
+
+        nav {
+            padding: 10px 10px;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-sizing: border-box;
+            background-color: black;
+            z-index: 999;
+        }
+
+        .close-btn {
+            font-size: 2em;
+            color: #fff;
+            border: none;
+            background: none;
+            cursor: pointer;
+            position: absolute;
+            right: 20px;
+            top: 10px;
+        }
+
+        .toggle-btn {
+            font-size: 1.5em;
+            color: #fff;
+            border: none;
+            background: none;
+            cursor: pointer;
+        }
+
+        .section-title {
+            text-align: center;
+            padding: 1.5px;
+            font-size: 2em;
+            color: #fff;
+        }
+
+        .card {
+            background-color: #1a1a1a;
+            border-radius: 10px;
+            margin: 20px;
+            transition: transform 0.2s;
+            cursor: pointer;
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+        }
+
+        .quiz-container 
+        {
+    display: none;
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #3c3c3c; /* Slightly lighter than the main content */
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Add subtle shadow */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transitions */
+}
+
+.quiz-title {
+    font-size: 1.8em;
+    margin-bottom: 20px;
+    color: #f0f0f0; /* Lighter title color for contrast */
+    text-align: center;
+}
+
+.quiz-question {
+    margin-bottom: 15px;
+    padding: 15px;
+    background-color: #4a4a4a; /* Background for each question */
+    border-radius: 8px;
+    transition: transform 0.2s; /* Smooth hover effect */
+}
+
+.quiz-question:hover {
+    transform: translateY(-2px); /* Subtle lift on hover */
+}
+
+.quiz-options {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.quiz-options li {
+    background-color: #575757; /* Background for options */
+    padding: 10px;
+    margin: 5px 0; /* Spacing between options */
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* Smooth background color transition */
+}
+
+.quiz-options li:hover {
+    background-color: #686868; /* Change background on hover */
+}
+
+.quiz-result {
+    display: none;
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #444; /* Background for the results */
+    border-radius: 8px;
+    text-align: center;
+    color: #f0f0f0; /* Light color for text */
+}
+
+        /* Optional styles for better appearance */
+        .btn {
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar Section -->
+    <nav id="navbar" class="navbar-visible">
+        <button id="toggleBtn" class="toggle-btn">☰</button>
+        <h1 style="color: white; font-size: 1.1em; display: flex; align-items: center;">
+            <i class="fa-solid fa-graduation-cap" style="margin-right: 10px;"></i>
+            Learning Management System
+        </h1>
+    </nav>
+
+    <!-- Sidebar Section -->
+    <div class="sidebar">
+        <button id="closeBtn" class="close-btn">×</button>
+        <ul>
+            <li><a href="base.html"><i class="fas fa-tachometer-alt"></i>Dashboard</a></li>
+            <li><a href="Courses.html"><i class="fas fa-book"></i>Courses</a></li>
+            <li><a href="quizzes.html"><i class="fas fa-tasks"></i>Quizzes</a></li>
+            <li><a href="Assignments.html"><i class="fas fa-file-alt"></i>Assignments</a></li>
+            <li><a href="Attendence.html"><i class="fas fa-user-check"></i>Attendence</a></li>
+            <li><a href="login.html"><i class="fas fa-sign-in-alt"></i>Login</a></li>
+        </ul>
+    </div>
+
+    <!-- Content Section -->
+    <div class="content">
+        <h2 class="section-title">Quizzes</h2>
+        <div class="container">
+            <!-- Course Cards -->
+            <div class="card text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Computer Science Department</h5>
+                    <button class="btn btn-primary attempt-btn" data-subject="Computer Science">Attempt</button>
+                    <button class="btn btn-success marks-btn" data-subject="Computer Science">Marks as Done</button>
+                </div>
+            </div>
+            <div class="card text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Data Science & AI</h5>
+                    <button class="btn btn-primary attempt-btn" data-subject="Data Science">Attempt</button>
+                    <button class="btn btn-success marks-btn" data-subject="Data Science">Marks as Done</button>
+                </div>
+            </div>
+            <div class="card text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Machine Learning Department</h5>
+                    <button class="btn btn-primary attempt-btn" data-subject="Machine Learning">Attempt</button>
+                    <button class="btn btn-success marks-btn" data-subject="Machine Learning">Marks as Done</button>
+                </div>
+            </div>
+            <div class="card text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Web Development</h5>
+                    <button class="btn btn-primary attempt-btn" data-subject="Web Development">Attempt</button>
+                    <button class="btn btn-success marks-btn" data-subject="Web Development">Marks as Done</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quiz Container -->
+        <div class="quiz-container" id="quizContainer">
+            <h3 class="quiz-title"></h3>
+            <div id="quizQuestions"></div>
+            <button class="btn btn-danger" id="submitQuiz">Submit</button>
+            <div class="quiz-result" id="quizResult"></div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        const closeBtn = document.getElementById('closeBtn');
+        const toggleBtn = document.getElementById('toggleBtn');
+        const sidebar = document.querySelector('.sidebar');
+        const content = document.querySelector('.content');
+        const attemptBtns = document.querySelectorAll('.attempt-btn');
+        const submitQuiz = document.getElementById('submitQuiz');
+        const quizContainer = document.getElementById('quizContainer');
+        const quizQuestionsDiv = document.getElementById('quizQuestions');
+        const quizResultDiv = document.getElementById('quizResult');
+
+        // Sample quiz data
+        const quizzes = {
+            "Computer Science": [
+                { question: "What is the main function of a compiler?", options: ["Translate code", "Execute code", "Store code", "None"], answer: 0 },
+                { question: "What does CPU stand for?", options: ["Central Processing Unit", "Computer Personal Unit", "Central Program Unit", "None"], answer: 0 },
+                { question: "Which language is used for web development?", options: ["Python", "C++", "HTML", "Java"], answer: 2 },
+                { question: "What is a binary tree?", options: ["A tree with at most two children", "A tree with at least two children", "A tree with no children", "None"], answer: 0 },
+                { question: "What does OS stand for?", options: ["Operating System", "Open Source", "Online Service", "None"], answer: 0 },
+                { question: "Which of the following is a database management system?", options: ["MySQL", "HTML", "CSS", "JavaScript"], answer: 0 },
+                { question: "What is recursion?", options: ["Function calling itself", "Function not calling itself", "Looping through a function", "None"], answer: 0 },
+                { question: "What does HTML stand for?", options: ["HyperText Markup Language", "High-Level Text Markup Language", "Hyperlink and Text Markup Language", "None"], answer: 0 },
+                { question: "What is the time complexity of binary search?", options: ["O(n)", "O(log n)", "O(n log n)", "O(1)"], answer: 1 },
+                { question: "What is polymorphism?", options: ["Same function name with different parameters", "Function overloading", "Both A and B", "None"], answer: 2 },
+            ],
+            "Data Science": [
+                { question: "What is the primary goal of data science?", options: ["Data storage", "Data analysis", "Data entry", "Data deletion"], answer: 1 },
+                { question: "What programming language is most commonly used in data science?", options: ["Python", "C++", "Java", "JavaScript"], answer: 0 },
+                { question: "What is a dataset?", options: ["Collection of data", "Single data point", "None", "All of the above"], answer: 0 },
+                { question: "What is the purpose of data cleaning?", options: ["Remove irrelevant data", "Ensure data accuracy", "Both A and B", "None"], answer: 2 },
+                { question: "What does EDA stand for?", options: ["Exploratory Data Analysis", "Experimental Data Analysis", "Expanded Data Analysis", "None"], answer: 0 },
+                { question: "What is the difference between structured and unstructured data?", options: ["Format and organization", "None", "Both A and B", "All of the above"], answer: 2 },
+                { question: "What is a common data visualization tool?", options: ["Tableau", "Excel", "Power BI", "All of the above"], answer: 3 },
+                { question: "What does NLP stand for?", options: ["Natural Language Processing", "Neural Language Processing", "None", "Natural Language Programming"], answer: 0 },
+                { question: "Which of the following is a supervised learning algorithm?", options: ["K-Means", "Decision Trees", "Hierarchical Clustering", "None"], answer: 1 },
+                { question: "What is the purpose of data visualization?", options: ["Make data more understandable", "Store data", "Perform calculations", "None"], answer: 0 },
+            ],
+            "Machine Learning": [
+                { question: "What is the main aim of machine learning?", options: ["Make predictions", "Store data", "Execute programs", "None"], answer: 0 },
+                { question: "Which algorithm is used for regression?", options: ["K-Means", "Linear Regression", "Decision Tree", "None"], answer: 1 },
+                { question: "What is training in machine learning?", options: ["Feeding data to the model", "Evaluating the model", "None", "All of the above"], answer: 0 },
+                { question: "What is the difference between supervised and unsupervised learning?", options: ["Labeled vs. unlabeled data", "Different algorithms", "None", "All of the above"], answer: 0 },
+                { question: "Which of the following is a common loss function?", options: ["Mean Squared Error", "Absolute Error", "Cross Entropy", "All of the above"], answer: 3 },
+                { question: "What is overfitting?", options: ["Model is too complex", "Model is too simple", "Model performs well on training data", "None"], answer: 0 },
+                { question: "What is feature selection?", options: ["Choosing relevant features for a model", "Choosing irrelevant features", "All features", "None"], answer: 0 },
+                { question: "What does SVM stand for?", options: ["Support Vector Machine", "Support Vector Model", "Single Vector Machine", "None"], answer: 0 },
+                { question: "What is the purpose of cross-validation?", options: ["Evaluate model performance", "Store data", "Optimize model", "None"], answer: 0 },
+                { question: "Which library is popular for machine learning in Python?", options: ["Pandas", "Scikit-learn", "NumPy", "None"], answer: 1 },
+            ],
+            "Web Development": [
+                { question: "What does HTML stand for?", options: ["HyperText Markup Language", "High-Level Text Markup Language", "Hyperlink and Text Markup Language", "None"], answer: 0 },
+                { question: "What is CSS used for?", options: ["Styling web pages", "Structuring web pages", "Data storage", "None"], answer: 0 },
+                { question: "Which of the following is a JavaScript framework?", options: ["React", "Django", "Flask", "Ruby on Rails"], answer: 0 },
+                { question: "What is a responsive web design?", options: ["Adapting layout to different screen sizes", "A design for mobile only", "None", "All of the above"], answer: 0 },
+                { question: "What does API stand for?", options: ["Application Programming Interface", "Applied Programming Interface", "Application Programming Integration", "None"], answer: 0 },
+                { question: "What is the purpose of a web server?", options: ["Store files", "Serve files", "Process files", "None"], answer: 1 },
+                { question: "Which of the following is a CSS preprocessor?", options: ["Sass", "HTML", "JavaScript", "None"], answer: 0 },
+                { question: "What does SEO stand for?", options: ["Search Engine Optimization", "Social Engine Optimization", "Search Engine Operation", "None"], answer: 0 },
+                { question: "Which HTTP method is used to send data to the server?", options: ["GET", "POST", "DELETE", "None"], answer: 1 },
+                { question: "What is the purpose of a CDN?", options: ["Distribute content globally", "Store content locally", "Serve ads", "None"], answer: 0 },
+            ],
+        };
+
+        attemptBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const subject = this.getAttribute('data-subject');
+                showQuiz(subject);
+            });
+        });
+
+        function showQuiz(subject) {
+            quizContainer.style.display = 'block';
+            quizQuestionsDiv.innerHTML = ''; // Clear previous questions
+            quizResultDiv.style.display = 'none'; // Hide results
+            const quizData = quizzes[subject];
+            document.querySelector('.quiz-title').innerText = `${subject} Quiz`;
+
+            quizData.forEach((questionObj, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.classList.add('quiz-question');
+                questionDiv.innerHTML = `
+                    <p>${index + 1}. ${questionObj.question}</p>
+                    ${questionObj.options.map((option, i) => `
+                        <div>
+                            <input type="radio" name="question${index}" value="${i}" id="question${index}_option${i}">
+                            <label for="question${index}_option${i}">${option}</label>
+                        </div>`).join('')}
+                `;
+                quizQuestionsDiv.appendChild(questionDiv);
+            });
+
+            submitQuiz.onclick = () => {
+                evaluateQuiz(quizData);
+            };
+        }
+
+        function evaluateQuiz(quizData) {
+            let score = 0;
+            quizData.forEach((questionObj, index) => {
+                const selectedOption = document.querySelector(`input[name="question${index}"]:checked`);
+                if (selectedOption && parseInt(selectedOption.value) === questionObj.answer) {
+                    score++;
+                }
+            });
+
+            quizResultDiv.innerHTML = `You scored ${score} out of ${quizData.length}`;
+            quizResultDiv.style.display = 'block';
+        }
+
+        closeBtn.addEventListener('click', () => {
+            sidebar.style.left = '-200px'; // Hide sidebar
+            content.style.marginLeft = '0'; // Expand content
+        });
+
+        toggleBtn.addEventListener('click', () => {
+            if (sidebar.style.left === '0px') {
+                sidebar.style.left = '-200px'; // Hide sidebar
+                content.style.marginLeft = '0'; // Expand content
+            } else {
+                sidebar.style.left = '0px'; // Show sidebar
+                content.style.marginLeft = '200px'; // Shrink content
+            }
+        });
+
+        // Optional: Add functionality to close sidebar when clicking outside
+        document.addEventListener('click', (event) => {
+            if (!sidebar.contains(event.target) && !toggleBtn.contains(event.target)) {
+                sidebar.style.left = '-200px'; // Hide sidebar
+                content.style.marginLeft = '0'; // Expand content
+            }
+        });
+    </script>
+    
+</body>
+</html>

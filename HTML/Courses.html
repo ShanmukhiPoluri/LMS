@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Courses - Learning Management System</title>
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #000; /* Dark black background */
+            color: #fff; /* White text color */
+        }
+
+        /* Navbar styling */
+        nav {
+            padding: 10px 10px;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-sizing: border-box;
+            background-color: black;
+            z-index: 999;
+        }
+
+        .toggle-btn {
+            font-size: 24px;
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+        }
+
+        /* Main container styling */
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            padding: 0.5px 10px 10px; /* Added padding-top for navbar */
+            background-color: #000; /* Match container background */
+        }
+
+        /* Individual course card styling */
+        .card {
+            background-color: #1a1a1a; /* Dark card background */
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2); /* Light shadow for visibility */
+            width: 300px;
+            margin: 20px;
+            overflow: hidden;
+            text-align: center;
+            transition: transform 0.2s;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* Hover effect on cards */
+        .card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(255, 255, 255, 0.3); /* Enhanced shadow on hover */
+        }
+
+        /* Course card image */
+        .card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+
+        /* Course card description */
+        .card h3 {
+            padding: 10px 0;
+            font-size: 1.2em;
+            margin: 0;
+        }
+
+        /* "Resume" button styling */
+        .resume-btn {
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 1em;
+        }
+
+        /* Styling for courses section */
+        .section-title {
+            text-align: center;
+            padding: 1.5px;
+            font-size: 2em;
+            color: #fff; /* White color for title */
+        }
+
+        .card .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .card p {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0 10px;
+        }
+
+        /* Sidebar styles from previous file */
+        .sidebar {
+            background-color: #111;
+            color: white;
+            width: 200px;
+            height: 100vh;
+            padding-top: 20px;
+            position: fixed;
+            left: -200px; /* Initially hide the sidebar */
+            top: 0;
+            overflow: hidden;
+            transition: left 0.3s ease;
+            z-index: 1000;
+            box-sizing: border-box;
+        }
+
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sidebar ul li {
+            padding: 15px;
+            text-align: left;
+            margin-top: 30px; /* Adds space above each menu item */
+        }
+
+        .sidebar ul li a {
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            font-weight: bold;
+        }
+
+        .sidebar ul li a i {
+            margin-right: 10px; /* Adds space between icon and text */
+        }
+
+        .sidebar ul li:hover {
+            background-color: #575757;
+            cursor: pointer;
+            border-radius: 10px;
+            font-size: large;
+        }
+
+        .close-btn {
+            font-size: 24px;
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            position: absolute;
+            top: 10px;
+            right: 15px;
+        }
+
+        .content {
+            margin-left: 220px; /* Adjusted for sidebar width */
+            padding: 20px;
+            height: 100vh;
+            background-color: #2d2d2d;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: margin-left 0.3s ease, width 0.3s ease;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Navbar Section -->
+    <nav id="navbar">
+        <button id="toggleBtn" class="toggle-btn">☰</button>
+        <h1 style="color: white; font-size: 1.1em; display: flex; align-items: center;">
+            <i class="fa-solid fa-graduation-cap" style="margin-right: 10px;"></i>
+            Learning Management System
+        </h1>
+    </nav>
+
+    <!-- Sidebar Section -->
+    <div class="sidebar">
+        <button id="closeBtn" class="close-btn">×</button>
+        <ul>
+            <li><a href="base.html"><i class="fas fa-tachometer-alt"></i>Dashboard</a></li>
+            <li><a href="Courses.html"><i class="fas fa-book"></i>Courses</a></li>
+            <li><a href="quizzes.html"><i class="fas fa-tasks"></i>Quizzes</a></li>
+            <li><a href="Assignments.html"><i class="fas fa-file-alt"></i>Assignments</a></li>
+            <li><a href="Attendence.html"><i class="fas fa-user-check"></i>Attendence</a></li>
+            <li><a href="login.html"><i class="fas fa-sign-in-alt"></i>Login</a></li>
+        </ul>
+    </div>
+
+    <h2 class="section-title">Courses</h2>
+    <div class="container">
+        <!-- Computer Science Course Card -->
+        <a href="https://www.youtube.com/watch?v=pKd0Rpw7O48" class="card" target="_blank">
+            <img src="https://i.ytimg.com/vi/pKd0Rpw7O48/maxresdefault.jpg" alt="Computer Science Department">
+            <h3>Computer Science Department</h3>
+            <p>
+                <img src="https://via.placeholder.com/40" alt="Instructor" class="avatar">
+                Dr.Mosh
+            </p>
+            <div class="resume-btn">Resume</div>
+        </a>
+
+        <!-- Data Science Course Card -->
+        <a href="https://www.youtube.com/watch?v=ua-CiDNNj30" class="card" target="_blank">
+            <img src="https://i.ytimg.com/vi/ua-CiDNNj30/maxresdefault.jpg" alt="Data Science Department">
+            <h3>Data Science & AI</h3>
+            <p>
+                <img src="https://via.placeholder.com/40" alt="Instructor" class="avatar">
+                Dr. Sarah AI
+            </p>
+            <div class="resume-btn">Resume</div>
+        </a>
+
+        <!-- Machine Learning Course Card -->
+        <a href="https://www.youtube.com/watch?v=Gv9_4yMHFhI" class="card" target="_blank">
+            <img src="https://i.ytimg.com/vi/Gv9_4yMHFhI/maxresdefault.jpg" alt="Machine Learning">
+            <h3>Machine Learning Department</h3>
+            <p>
+                <img src="https://via.placeholder.com/40" alt="Instructor" class="avatar">
+                Dr. Mark Tensor
+            </p>
+            <div class="resume-btn">Resume</div>
+        </a>
+
+        <!-- Spring Boot Course Card -->
+        <a href="https://www.youtube.com/watch?v=lxIlOkLuYIo" class="card" target="_blank">
+            <img src="https://i.ytimg.com/vi/lxIlOkLuYIo/maxresdefault.jpg" alt="Spring Boot">
+            <h3>Spring Boot Development</h3>
+            <p>
+                <img src="https://via.placeholder.com/40" alt="Instructor" class="avatar">
+                Mr.Jonnalagadda Surya Kiran
+            </p>
+            <div class="resume-btn">Resume</div>
+        </a>
+
+        <!-- HTML Course Card -->
+        <a href="https://www.youtube.com/watch?v=HcOc7P5BMi4" class="card" target="_blank">
+            <img src="https://i.ytimg.com/vi/HcOc7P5BMi4/maxresdefault.jpg" alt="HTML">
+            <h3>HTML</h3>
+            <p>
+                <img src="https://via.placeholder.com/40" alt="Instructor" class="avatar">
+                Ms.Shraddha Kapra
+            </p>
+            <div class="resume-btn">Resume</div>
+        </a>
+
+        <!-- Math Course Card -->
+        <a href="https://www.youtube.com/watch?v=-wzD8Ui8r_s" class="card" target="_blank">
+            <img src="https://i.ytimg.com/vi/-wzD8Ui8r_s/maxresdefault.jpg" alt="Math">
+            <h3>Maths</h3>
+            <p>
+                <img src="https://via.placeholder.com/40" alt="Instructor" class="avatar">
+                Mr.Tharun Speaks
+            </p>
+            <div class="resume-btn">Resume</div>
+        </a>
+
+
+        <!-- Web Development Course Card -->
+        <a href="https://www.youtube.com/watch?v=tVzUXW6siu0&list=PLu0W_9lII9agq5TrH9XLIKQvv0iaF2X3w" class="card" target="_blank">
+            <img src="https://i.ytimg.com/vi/tVzUXW6siu0/maxresdefault.jpg" alt="Web Development">
+            <h3>Web Development</h3>
+            <p>
+                <img src="https://via.placeholder.com/40" alt="Instructor" class="avatar">
+                Mr. CodeWithHarry
+            </p>
+            <div class="resume-btn">Resume</div>
+        </a>
+
+        <!-- React JS Course Card -->
+        <a href="https://www.youtube.com/watch?v=ZaC6oCIpjR0" class="card" target="_blank">
+            <img src="https://i.ytimg.com/vi/ZaC6oCIpjR0/maxresdefault.jpg" alt="React JS">
+            <h3>React JS</h3>
+            <p>
+                <img src="https://via.placeholder.com/40" alt="Instructor" class="avatar">
+                Mr. Joe
+            </p>
+            <div class="resume-btn">Resume</div>
+        </a>
+
+        <!-- Podcast Course Card (JSK) -->
+        <a href="https://www.youtube.com/watch?v=4iH3ThmJfEI" class="card" target="_blank">
+            <img src="https://i.ytimg.com/vi/4iH3ThmJfEI/maxresdefault.jpg" alt="Podcast">
+            <h3>Podcast</h3>
+            <p>
+                <img src="https://via.placeholder.com/40" alt="Instructor" class="avatar">
+                Mr. JSK
+            </p>
+            <div class="resume-btn">Resume</div>
+        </a>
+
+        <!-- Podcast Course Card (Sundar Pichai) -->
+        <a href="https://www.youtube.com/watch?v=X7vVP7F3-wM" class="card" target="_blank">
+            <img src="https://i.ytimg.com/vi/X7vVP7F3-wM/maxresdefault.jpg" alt="Podcast">
+            <h3>Podcast</h3>
+            <p>
+                <img src="https://via.placeholder.com/40" alt="Instructor" class="avatar">
+                Mr. Sundar Pichai
+            </p>
+            <div class="resume-btn">Resume</div>
+        </a>
+
+
+    </div>
+
+    <script>
+        // Sidebar toggle functionality
+        document.getElementById('toggleBtn').onclick = function() {
+            document.querySelector('.sidebar').style.left = '0';
+        }
+
+        document.getElementById('closeBtn').onclick = function() {
+            document.querySelector('.sidebar').style.left = '-200px';
+        }
+    </script>
+</body>
+</html>
